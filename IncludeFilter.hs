@@ -55,6 +55,7 @@ Note: the metadata from the included source files are discarded.
 
 import           Control.Monad
 import           Data.List
+import           Data.Text.IO (readFile)
 import           System.Directory
 
 import           Text.Pandoc
@@ -67,13 +68,10 @@ stripPandoc p =
     Left _ -> [Null]
     Right (Pandoc _ blocks) -> blocks
 
-ioReadMarkdown :: String -> IO(Either PandocError Pandoc)
-ioReadMarkdown content = return $! readMarkdown def content
-
 getContent :: String -> IO [Block]
 getContent file = do
-  c <- readFile file
-  p <- ioReadMarkdown c
+  c <- Data.Text.IO.readFile file
+  p <- runIO $ readMarkdown def c
   return $! stripPandoc p
 
 getProcessableFileList :: String -> IO [String]
