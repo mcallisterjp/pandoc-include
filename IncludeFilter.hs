@@ -1,4 +1,5 @@
 #!/usr/bin/env runhaskell
+{-# LANGUAGE OverloadedStrings #-}
 
 {-
 The MIT License (MIT)
@@ -55,6 +56,7 @@ Note: the metadata from the included source files are discarded.
 
 import           Control.Monad
 import           Data.List
+import qualified Data.Text as T
 import           Data.Text.IO (readFile)
 import           System.Directory
 
@@ -74,10 +76,10 @@ getContent file = do
   p <- runIO $ readMarkdown def c
   return $! stripPandoc p
 
-getProcessableFileList :: String -> IO [String]
+getProcessableFileList :: T.Text -> IO [FilePath]
 getProcessableFileList list = do
-  let f = lines list
-  let files = filter (\x -> not $ "#" `isPrefixOf` x) f
+  let f = T.lines list
+  let files = map T.unpack $ filter (\x -> not $ "#" `T.isPrefixOf` x) f
   filterM doesFileExist files
 
 processFiles :: [String] -> IO [Block]
