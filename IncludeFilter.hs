@@ -72,7 +72,7 @@ stripPandoc p =
 
 getContent :: String -> IO [Block]
 getContent file = do
-  let exts = extensionsFromList [Ext_simple_tables, Ext_pipe_tables]
+  let exts = extensionsFromList [Ext_simple_tables, Ext_pipe_tables, Ext_raw_html]
   c <- Data.Text.IO.readFile file
   p <- runIO $ readMarkdown (def { readerExtensions = exts } ) c
   return $! stripPandoc p
